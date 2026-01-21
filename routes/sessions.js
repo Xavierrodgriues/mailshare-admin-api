@@ -17,14 +17,16 @@ router.get('/', authenticateAdmin, async (req, res) => {
     }
 });
 
-// DELETE/INVALIDATE a session
+// DELETE/INVALIDATE a session (Secure logout)
 router.post('/logout-device', authenticateAdmin, async (req, res) => {
     const { sessionId } = req.body;
+    console.log('[DEBUG] Logout Device request:', { sessionId });
+
     try {
         await Session.findByIdAndUpdate(sessionId, { isActive: false });
         res.json({ success: true, message: 'Device logged out' });
     } catch (err) {
-        console.error(err);
+        console.error('[DEBUG] Logout Device Error:', err);
         res.status(500).json({ error: 'Server error' });
     }
 });
